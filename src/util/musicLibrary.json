@@ -1,0 +1,36 @@
+{
+    "musicLibrary": {
+      "songs": [
+        {
+          "uri": 1,
+          "title": "Imagine",
+          "author": "John Lennon",
+          "album": "Imagine"
+        },
+        {
+          "uri": 2,
+          "title": "Bohemian Rhapsody",
+          "author": "Queen",
+          "album": "A Night at the Opera"
+        },
+        {
+          "uri": 3,
+          "title": "Hotel California",
+          "author": "Eagles",
+          "album": "Hotel California"
+        },
+        {
+          "uri": 4,
+          "title": "Shape of You",
+          "author": "Ed Sheeran",
+          "album": "÷ (Divide)"
+        },
+        {
+          "uri": 5,
+          "title": "Rolling in the Deep",
+          "author": "Adele",
+          "album": "21"
+        }
+      ]
+    }
+}

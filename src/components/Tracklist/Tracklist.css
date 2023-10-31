@@ -1,0 +1,10 @@
+.TrackList{
+    min-width: 400px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    padding: 20px 0px;
+}
+
+.TrackList h2{
+    padding: 0 10px;
+}
