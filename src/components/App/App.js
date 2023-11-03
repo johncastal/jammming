@@ -55,6 +55,7 @@ function App() {
   const handleSavePlaylist = async () => {
     try {
       await Spotify.savePlaylist(playlistName, uriPlaylist);
+      setPlaylistTracks([]);
     } catch (error) {
       console.error(error);
     }
