@@ -3,10 +3,15 @@ import './SearchBar.css';
 
 const SearchBar = ({onSearch}) => {
     const [searchSong, setSearchSong] = useState("");
+    //const [inputValue, setInputValue] = useState("");
 
     const handleSearchSongChange = useCallback((event) => {
         setSearchSong(event.target.value);
       }, []);
+
+    //const handleInputChange = (event) => {
+    //    setInputValue(event.target.value);
+    //};
     
     const search = () => {
         onSearch(searchSong);
@@ -15,7 +20,7 @@ const SearchBar = ({onSearch}) => {
     
     return (
         <div className="SearchBar">
-            <input className="inputSearch" placeholder="Enter A Song Title" onChange={handleSearchSongChange}/>
+            <input  className="inputSearch" placeholder="Enter A Song Title" onChange={handleSearchSongChange}/>
             <button className="SearchButton" onClick={search}>
                 Search
             </button>

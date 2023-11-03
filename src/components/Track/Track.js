@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+//import React, { useState, useCallback } from "react";
 import './Track.css';
 
 const Track = ({song,addTrackOn,type,removeTrack}) => {
@@ -11,9 +11,9 @@ const Track = ({song,addTrackOn,type,removeTrack}) => {
       //const isTrackInPlaylist = playlistTracks.some((track) => track.id === song.id);
       return(
         <div className="cardTrack">
-            <div className="headerCard">
-                    <h3 className="song">{`${song.title}`}</h3>
-                    <p>{`${song.author} | ${song.album}`}</p>
+            <div className="headerCard" key={song.name}>
+                    <h3 className="song">{`${song.name}`}</h3>
+                    <p>{`${song.artist} | ${song.album}`}</p>
             </div>
               {
                 type === 'tracklist' ? (
