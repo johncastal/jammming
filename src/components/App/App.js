@@ -4,25 +4,52 @@ import SearchBar from "../SearchBar/SearchBar";
 import Tracklist from "../Tracklist/Tracklist";
 import Playlist from "../Playlist/Playlist";
 import Spotify from "../../util/spotify";
+import PlaylistList from "../PlaylistList/PlaylistList";  
 
 function App() {
   const [searchResults, setSearchResults] = useState([]);
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [uriPlaylist,setUriPlaylist] = useState([]);
   const [playlistName,SetPlaylistName] = useState('');
+  const [namesPlaylist,setnamesPlaylist] = useState([]);
+  const [idPlaylists,setIdPlaylists] = useState([]);
 
+  // To get the names of the playlists and Ids
+  const handleNamesPlayList = async () => {
+    try {
+      const { playlistsNames,idPlaylists } = await Spotify.getPlaylistNames();
+      setnamesPlaylist(playlistsNames);
+      setIdPlaylists(idPlaylists);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  // to update tracklist when user select a playlist
+  const playlistListTracks = async (idPlaylists) => {
+    try {
+      const tracks = await Spotify.getPlaylistTracks(idPlaylists);
+      setPlaylistTracks(tracks)
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+  useEffect(()=>{
+    setnamesPlaylist(handleNamesPlayList);
+  },[])
+
+  
   useEffect(()=>{
     Spotify.getAccessToken();
-  })
+  },[])
 
-  //Spotify.getAccessToken();
+
   const  search =  async (searchSong) => {
-    //const tracks = Spotify.searchArray(searchSong);
-    //setSearchResults(tracks);
     try {
       const tracks = await Spotify.search(searchSong);
       setSearchResults(tracks);
-      //console.log(tracks);
     } catch (error) {
       console.error(error);
     }
@@ -36,7 +63,6 @@ function App() {
     setPlaylistTracks((prevTracks)=>[...prevTracks,track]);
   }
 
-  
 
   const removeTrack = (track) => {
     let newPlaylistTracks = playlistTracks.filter(trackIn => trackIn !== track)
@@ -47,6 +73,7 @@ function App() {
     SetPlaylistName(name);
   }
 
+  // required to update UriPlaylist as a state variable
   useEffect(() => {
     const uri = playlistTracks.map(track => track.uri);
     setUriPlaylist(uri);
@@ -56,11 +83,12 @@ function App() {
     try {
       await Spotify.savePlaylist(playlistName, uriPlaylist);
       setPlaylistTracks([]);
+      setnamesPlaylist(handleNamesPlayList);
     } catch (error) {
       console.error(error);
     }
   };
-  
+
   
   return (
     <div className="App">
@@ -72,6 +100,7 @@ function App() {
         <div className='content_lists'>
           <Tracklist tracks={searchResults} addTrack={addTrack} playlistTracks={playlistTracks}/>
           <Playlist playlistTracks={playlistTracks} removeTrack={removeTrack} savePlaylist={handleSavePlaylist} playlistName={handlePlaylistName}/>
+          <PlaylistList namesPlayList={namesPlaylist} idPlaylists={idPlaylists} itemsPlaylist={playlistListTracks}/>
         </div>
       </div>
     </div>

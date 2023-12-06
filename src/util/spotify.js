@@ -1,6 +1,6 @@
 const clientId = '220133310dc04b5cb7049ed1a890d223'; // Insert client ID here.
 const redirectUri = 'http://localhost:3000/'; // Have to add this to your accepted Spotify redirect URIs on the Spotify API.
-let accessToken;
+let accessToken; 
 
 const Spotify = {
 
@@ -71,7 +71,48 @@ const Spotify = {
       });
     });
   },
-  
+
+  async getPlaylistNames() {
+    const accessToken = Spotify.getAccessToken();
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    let userId;
+
+    const responseId = await fetch(`https://api.spotify.com/v1/me`, { headers: headers });
+    const jsonResponseId = await responseId.json();
+    userId = jsonResponseId.id;
+
+    const response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {headers: headers});
+    const jsonResponse = await response.json();
+    const playlistsNames = jsonResponse.items.map((item)=>item.name);
+    const idPlaylists = jsonResponse.items.map((item)=>item.id);
+    const playlistInfo = {
+      'playlistsNames':playlistsNames,
+      'idPlaylists':idPlaylists
+    }
+    return playlistInfo;
+  },
+
+  async getPlaylistTracks(idPlaylist) {
+    const accessToken = Spotify.getAccessToken();
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    
+    const response = await fetch(`https://api.spotify.com/v1/playlists/${idPlaylist}/tracks`, {headers: headers});
+    const jsonResponse = await response.json();
+    try{
+      const tracks = jsonResponse.items.map(track => ({
+        id: track.track.id,
+        name: track.track.name,
+        artist: track.track.artists[0].name,
+        album: track.track.album.name,
+        uri: track.track.uri
+      }));
+      return tracks
+    }catch(e){
+      console.log(e);
+    }
+    return []
+  },
+
   searchArray(searchSong) {
     const musicLibrary = {
       songs: [
