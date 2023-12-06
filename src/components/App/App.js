@@ -73,6 +73,10 @@ function App() {
     SetPlaylistName(name);
   }
 
+  const queryPlaylistName = () => {
+    return playlistName
+  }
+
   // required to update UriPlaylist as a state variable
   useEffect(() => {
     const uri = playlistTracks.map(track => track.uri);
@@ -99,8 +103,8 @@ function App() {
         <SearchBar onSearch={search}/>
         <div className='content_lists'>
           <Tracklist tracks={searchResults} addTrack={addTrack} playlistTracks={playlistTracks}/>
-          <Playlist playlistTracks={playlistTracks} removeTrack={removeTrack} savePlaylist={handleSavePlaylist} playlistName={handlePlaylistName}/>
-          <PlaylistList namesPlayList={namesPlaylist} idPlaylists={idPlaylists} itemsPlaylist={playlistListTracks}/>
+          <Playlist playlistTracks={playlistTracks} removeTrack={removeTrack} savePlaylist={handleSavePlaylist} playlistName={handlePlaylistName} queryPlaylistName={queryPlaylistName}/>
+          <PlaylistList namesPlayList={namesPlaylist} idPlaylists={idPlaylists} itemsPlaylist={playlistListTracks} playlistName={handlePlaylistName}/>
         </div>
       </div>
     </div>

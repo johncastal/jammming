@@ -1,6 +1,6 @@
 import './PlaylistList.css';
 
-const PlaylistList = ({ namesPlayList,idPlaylists,itemsPlaylist }) => {
+const PlaylistList = ({ namesPlayList,idPlaylists,itemsPlaylist,playlistName }) => {
 
   // To set dataPlaylist variable that depends of namesPlayList that is async
   let dataPlaylist = {} 
@@ -12,9 +12,11 @@ const PlaylistList = ({ namesPlayList,idPlaylists,itemsPlaylist }) => {
   }
 
   // Handle the tracks in the play list selected
-  const handleNamePlaylist = (id) => {
-    itemsPlaylist(id)
+  const handleNamePlaylist = (id,name) => {
+    itemsPlaylist(id);
+    playlistName(name);
   }
+
 
     return (
       <div className='PlaylistList'>
@@ -22,7 +24,7 @@ const PlaylistList = ({ namesPlayList,idPlaylists,itemsPlaylist }) => {
         <div className='list'>
           {Array.isArray(dataPlaylist) &&
             dataPlaylist.map((playlist) => (
-              <h3 key={playlist.name} onClick={()=>handleNamePlaylist(playlist.id)}>
+              <h3 key={playlist.name} onClick={()=>handleNamePlaylist(playlist.id,playlist.name)}>
                 {playlist.name}
               </h3>
             ))}

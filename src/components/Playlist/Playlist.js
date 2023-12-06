@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Track from '../Track/Track.js'
 import './Playlist.css';
 
-const Playlist = ({playlistTracks,removeTrack,savePlaylist,playlistName}) => {
+const Playlist = ({playlistTracks,removeTrack,savePlaylist,playlistName,queryPlaylistName}) => {
   const [isSaving, setIsSaving] = useState(false); 
+  const [inputValue, setInputValue] = useState('');
 
   const handleChangeInput = (event) => {
     playlistName(event.target.value)
   };
+
+  // Effect to set the initial value when the component mounts
+  useEffect(() => {
+    setInputValue(queryPlaylistName);
+  },[queryPlaylistName]);
 
   const handleSaveClick = async() => {
     setIsSaving(true);
@@ -28,7 +34,7 @@ const Playlist = ({playlistTracks,removeTrack,savePlaylist,playlistName}) => {
 
     return(
         <div className="Playlist">
-            <input className="namePlayList" onChange={handleChangeInput}/>
+            <input type="text" className="namePlayList" onChange={handleChangeInput} value={inputValue}/>
             {
                 playlistTracks.map((song)=>(
                     <Track song={song} type={'playlist'} removeTrack={removeTrack} key={song.name}/>
