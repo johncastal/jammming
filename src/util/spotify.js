@@ -1,5 +1,5 @@
 const clientId = '220133310dc04b5cb7049ed1a890d223'; // Insert client ID here.
-const redirectUri = 'https://prismatic-lebkuchen-e86680.netlify.app'; // Have to add this to your accepted Spotify redirect URIs on the Spotify API.
+const redirectUri = 'https://jammmingjcastal.netlify.app'; // Have to add this to your accepted Spotify redirect URIs on the Spotify API.
 let accessToken; 
 
 const Spotify = {
