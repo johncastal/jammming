@@ -72,6 +72,73 @@ const Spotify = {
     });
   },
 
+  async updatePlaylist(idPlaylist,trackUris) {
+    //console.log("Actualizando")
+    try {
+        const accessToken = Spotify.getAccessToken();
+        const headers = { Authorization: `Bearer ${accessToken}` };
+
+        // Get user ID
+        const responseId = await fetch(`https://api.spotify.com/v1/me`, { headers });
+        const jsonResponseId = await responseId.json();
+        const userId = jsonResponseId.id;
+
+        const response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists/${idPlaylist}/tracks`, {
+            headers, 
+            method: 'GET',
+        });
+        const jsonResponse = await response.json();
+        const tracks = jsonResponse.items.map(track => ({
+          id: track.track.id,
+          name: track.track.name,
+          artist: track.track.artists[0].name,
+          album: track.track.album.name,
+          uri: track.track.uri
+        }));
+
+        // Remove current items
+        //console.log("Remove current items");
+        await fetch(`https://api.spotify.com/v1/users/${userId}/playlists/${idPlaylist}/tracks`, {
+            headers,
+            method: 'DELETE',
+            body: JSON.stringify({ uris: tracks.map(track => track.uri) }),
+        });
+
+        // Add new items
+        //console.log("Add new items");
+        await fetch(`https://api.spotify.com/v1/users/${userId}/playlists/${idPlaylist}/tracks`, {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({ uris: trackUris }),
+        });
+
+        //return responseAdd;
+    } catch (error) {
+        // Handle errors here
+        console.error('Error updating playlist:', error);
+        throw new Error(`Error updating playlist: ${error.message}`);
+    }
+},
+
+  async unfollowPlaylist(idPlaylist) {
+    const accessToken = Spotify.getAccessToken();
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    let userId;
+
+    const responseId = await fetch(`https://api.spotify.com/v1/me`, { headers: headers });
+    const jsonResponseId = await responseId.json();
+    userId = jsonResponseId.id;
+
+    await fetch(`https://api.spotify.com/v1/users/${userId}/playlists/${idPlaylist}/followers`, {
+            headers,
+            method: 'DELETE'
+        });
+
+  },
+
+  
+  
+
   async getPlaylistNames() {
     const accessToken = Spotify.getAccessToken();
     const headers = { Authorization: `Bearer ${accessToken}` };
@@ -112,6 +179,7 @@ const Spotify = {
     }
     return []
   },
+
 
   searchArray(searchSong) {
     const musicLibrary = {

@@ -37,7 +37,7 @@ function App() {
   }
   
   useEffect(()=>{
-    setnamesPlaylist(handleNamesPlayList);
+    handleNamesPlayList();
   },[])
 
   
@@ -86,14 +86,37 @@ function App() {
   const handleSavePlaylist = async () => {
     try {
       await Spotify.savePlaylist(playlistName, uriPlaylist);
-      setPlaylistTracks([]);
-      setnamesPlaylist(handleNamesPlayList);
+      //setPlaylistTracks([]);
+      handleNamesPlayList();
     } catch (error) {
       console.error(error);
     }
   };
 
+  const updatePlaylistApp = async () => {
+    const newtracks = playlistTracks.map(track => track.uri);
+    const index = namesPlaylist.indexOf(playlistName);
+    const id = idPlaylists[index];
+    try {
+      await Spotify.updatePlaylist(id,newtracks);
+    } catch (error) {
+      console.error('Error in updatePlaylistApp:', error);
+    }
+  };
+
+  const unfollowPlaylist = async () => {
+    const index = namesPlaylist.indexOf(playlistName);
+    const id = idPlaylists[index];
+    try {
+      await Spotify.unfollowPlaylist(id);
+      setPlaylistTracks([]);
+      handleNamesPlayList();
+    } catch (error) {
+      console.error('Error in unfollowPlaylist:', error);
+    }
+  }
   
+
   return (
     <div className="App">
       <nav className='navBar'>
@@ -103,8 +126,22 @@ function App() {
         <SearchBar onSearch={search}/>
         <div className='content_lists'>
           <Tracklist tracks={searchResults} addTrack={addTrack} playlistTracks={playlistTracks}/>
-          <Playlist playlistTracks={playlistTracks} removeTrack={removeTrack} savePlaylist={handleSavePlaylist} playlistName={handlePlaylistName} queryPlaylistName={queryPlaylistName}/>
-          <PlaylistList namesPlayList={namesPlaylist} idPlaylists={idPlaylists} itemsPlaylist={playlistListTracks} playlistName={handlePlaylistName}/>
+          <Playlist 
+            playlistTracks={playlistTracks} 
+            removeTrack={removeTrack} 
+            savePlaylist={handleSavePlaylist} 
+            playlistName={handlePlaylistName} 
+            queryPlaylistName={queryPlaylistName}
+            updatePlaylist={updatePlaylistApp}
+            namesPlayList={namesPlaylist}
+            unfollowPlaylist={unfollowPlaylist}
+          />
+          <PlaylistList 
+            namesPlayList={namesPlaylist} 
+            idPlaylists={idPlaylists} 
+            itemsPlaylist={playlistListTracks} 
+            playlistName={handlePlaylistName}
+          />
         </div>
       </div>
     </div>
